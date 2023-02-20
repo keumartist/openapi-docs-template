@@ -1,0 +1,150 @@
+---
+openapi: 3.0.3
+info:
+  title: User api for example 
+  description: |
+    User api for example
+  contact:
+    name: developer
+    email: developer@developer.io
+  version: 1.0.0
+servers:
+- url: http://localhost:4010
+  description: localhost
+paths:
+  /v1/users/me:
+    get:
+      security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+      tags:
+      - user
+      summary: Get user by access token
+      operationId: getUserMe
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserMeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+  /eid/v1/users/{id}:
+    get:
+      security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+      tags:
+      - user
+      summary: Get user by id
+      operationId: getUserById
+      parameters:
+      - name: id
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserByIdResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+components:
+  schemas:
+    GetUserMeResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: user_id
+        email:
+          type: string
+          example: user_email
+        createdAt:
+          type: string
+          example: "2020-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          example: "2020-01-01T00:00:00.000Z"
+    GetUserByIdResponse:
+      $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "0"
+        email:
+          type: string
+          example: developr@developer.io
+        createdAt:
+          type: string
+          example: "2020-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          example: "2020-01-01T00:00:00.000Z"
+      description: User model
+    ErrorResponseBody:
+      type: object
+      properties:
+        code:
+          type: string
+          example: ERROR_CODE
+        message:
+          type: string
+          example: Error message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: x-api-key
+      in: header
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses: # Error responses
+    ForbiddenError:
+        description: Access denied
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: ACCESS_DENIED
+                message:
+                  type: string
+                  example: User does not have access to this resource
+    BadRequestError:
+        description: Invalid request
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: INVALID_REQUEST
+                message:
+                  type: string
+                  example: Invalid request
+    NotFoundError:
+        description: Resource not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: RESOURCE_NOT_FOUND
+                message:
+                  type: string
+                  example: Resource not found

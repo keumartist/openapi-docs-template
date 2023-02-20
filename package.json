@@ -1,0 +1,16 @@
+{
+  "name": "openapi-docs-template",
+  "version": "1.0.0",
+  "description": "OpenAPI docs template",
+  "packageManager": "yarn@3.2.4",
+  "devDependencies": {
+    "@stoplight/prism-cli": "^4.10.5",
+    "@stoplight/types": "^13.8.0",
+    "http-server": "^14.1.1"
+  },
+  "scripts": {
+    "dev": "http-server ./app -p 3000 -c-1",
+    "mock": "prism mock --errors",
+    "mock:default": "prism mock ./app/openapi/index.yaml --errors"
+  }
+}
